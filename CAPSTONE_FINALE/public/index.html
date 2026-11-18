@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Accedi · Gestionale</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css"></head>
+<body class="login"><main class="login-box">
+<h1>Gestionale</h1><p class="muted">Accedi per gestire clienti, prodotti e ordini.</p>
+<form id="form">
+<label>Email<input name="email" type="email" autocomplete="username" required autofocus></label>
+<label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+<p class="error" id="err" role="alert"></p>
+<button class="btn btn-primary">Accedi</button>
+</form></main>
+<script src="js/api.js"></script>
+<script>
+if (localStorage.getItem('token')) location.href = '/app.html';
+document.getElementById('form').onsubmit = async (e) => {
+  e.preventDefault();
+  const err = document.getElementById('err'); err.textContent = '';
+  try {
+    const d = await Api.post('/auth/login', Object.fromEntries(new FormData(e.target)));
+    localStorage.setItem('token', d.token);
+    localStorage.setItem('user', JSON.stringify(d.user));
+    location.href = '/app.html';
+  } catch (x) { err.textContent = x.message; }
+};
+</script></body></html>
